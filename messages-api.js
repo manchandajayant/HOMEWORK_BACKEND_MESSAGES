@@ -7,7 +7,15 @@ const port = 3000;
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
-app.post("/messages", (req, res) => {
+const num = (req, res, next) => {
+  if (req > 2) {
+    res.status(429).json("Too many requests");
+  } else {
+    next();
+  }
+};
+
+app.post("/messages", num, (req, res) => {
   if (req.body.text) {
     res.json({ message: req.body.text });
   } else {
